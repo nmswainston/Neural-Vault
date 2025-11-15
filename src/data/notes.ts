@@ -19,7 +19,7 @@ Early thoughts for the AmpMatch app:
 - Support RC crawlers first, EDF later
 - Telemetry support for all motor / ESC / battery combos
 - Keep notifications minimal and meaningful
-    `,
+`,
   },
   {
     id: "2",
@@ -37,7 +37,7 @@ Dark mode palette:
 Light mode uses a navy-based palette.
 
 Internal link to [AmpMatch ideas](/notes/ampmatch-initial-ideas).
-    `,
+`,
   },
   {
     id: "3",
@@ -50,10 +50,14 @@ Internal link to [AmpMatch ideas](/notes/ampmatch-initial-ideas).
 - Review patterns, checklists, and radio calls
 - Log key lessons after every session
 - Consider Neural Vault as a flight study notebook
-    `,
+`,
   },
 ]
 
 export function getAllNotes(): Note[] {
   return notes
+}
+
+export function getNoteBySlug(slug: string): Note | undefined {
+  return notes.find((note) => note.slug === slug)
 }

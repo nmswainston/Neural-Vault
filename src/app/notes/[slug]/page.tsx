@@ -1,28 +1,34 @@
 import { notFound } from "next/navigation"
-import { notes } from "@/data/notes"
+import { getNoteBySlug, getAllNotes } from "@/data/notes"
 
-import ReactMarkdown from "react-markdown"
+type PageProps = {
+  params: Promise<{
+    slug: string
+  }>
+}
 
-export default async function NotePage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export default async function NotePage({ params }: PageProps) {
   const { slug } = await params
-  const note = notes.find((n) => n.slug === slug)
-  if (!note) return notFound()
+  const note = getNoteBySlug(slug)
+
+  if (!note) {
+    notFound()
+  }
 
   return (
     <main className="mx-auto max-w-3xl p-6">
-      <article className="prose prose-invert max-w-none">
-        <ReactMarkdown>{note.content}</ReactMarkdown>
-      </article>
+      <h1 className="mb-4 text-2xl font-semibold">{note.title}</h1>
+      <pre className="whitespace-pre-wrap text-sm text-slate-200">
+        {note.content}
+      </pre>
     </main>
   )
 }
 
-export async function generateStaticParams() {
-  return notes.map((n) => ({ slug: n.slug }))
+export function generateStaticParams() {
+  const notes = getAllNotes()
+
+  return notes.map((note) => ({
+    slug: note.slug,
+  }))
 }
-
-

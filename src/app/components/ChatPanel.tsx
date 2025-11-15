@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
+import { usePathname } from "next/navigation"
 
 type ChatMessage = {
   role: "user" | "assistant"
@@ -12,35 +13,54 @@ export default function ChatPanel() {
   const [input, setInput] = useState("")
   const [pending, setPending] = useState(false)
 
+  const pathname = usePathname()
+  const slug =
+    pathname && pathname.startsWith("/notes/")
+      ? pathname.split("/")[2]
+      : null
+
   async function handleSend(e: React.FormEvent) {
     e.preventDefault()
-    const text = input.trim()
-    if (!text || pending) return
-    setPending(true)
-    setMessages((m) => [...m, { role: "user", content: text }])
+    if (!input.trim() || !slug) return
+
+    const userMessage = input.trim()
     setInput("")
+
+    const newMessages: ChatMessage[] = [
+      ...messages,
+      { role: "user", content: userMessage },
+    ]
+
+    setMessages(newMessages)
+    setPending(true)
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({
+          messages: newMessages,
+          noteSlug: slug,
+        }),
       })
+
       const data = await res.json()
-      if (!res.ok) {
-        setMessages((m) => [
-          ...m,
-          { role: "assistant", content: data?.error ?? "Error" },
-        ])
-      } else {
-        setMessages((m) => [
-          ...m,
-          { role: "assistant", content: data.reply as string },
-        ])
-      }
-    } catch {
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", content: "Network error" },
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: data.reply || "Neural Vault did not return a reply.",
+        },
+      ])
+    } catch (err) {
+      console.error(err)
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Error contacting Neural Vault API.",
+        },
       ])
     } finally {
       setPending(false)
@@ -54,6 +74,13 @@ export default function ChatPanel() {
       </h2>
 
       <div className="flex-1 rounded-md border border-slate-800 bg-slate-950/60 p-2 text-xs text-slate-200 overflow-y-auto space-y-2">
+        {messages.length === 0 && (
+          <p className="text-slate-500">
+            Ask a question about the current note and I&apos;ll use its
+            content to answer.
+          </p>
+        )}
+
         {messages.map((m, i) => (
           <div
             key={i}
@@ -66,11 +93,6 @@ export default function ChatPanel() {
             {m.content}
           </div>
         ))}
-        {pending && (
-          <div className="p-2 rounded-md bg-slate-700 text-slate-100">
-            …
-          </div>
-        )}
       </div>
 
       <form onSubmit={handleSend} className="mt-3 flex gap-2">
@@ -78,7 +100,7 @@ export default function ChatPanel() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask Neural Vault…"
+          placeholder="Ask Neural Vault about this note…"
           className="flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs outline-none focus:border-sky-500"
         />
         <button
@@ -86,11 +108,9 @@ export default function ChatPanel() {
           disabled={pending}
           className="rounded-md bg-slate-700 px-3 py-2 text-xs text-slate-50 disabled:opacity-60"
         >
-          Send
+          {pending ? "..." : "Send"}
         </button>
       </form>
     </section>
   )
 }
-
-
