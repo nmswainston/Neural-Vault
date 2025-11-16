@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
-import { getNoteBySlug } from "@/data/notes"
+import { getNoteBySlug } from "@/lib/notes"
 
 type ChatMessage = {
   role: "user" | "assistant"
@@ -11,30 +11,22 @@ export async function POST(req: Request) {
   try {
     const { messages, noteSlug } = await req.json()
 
-    if (!Array.isArray(messages) || messages.length === 0) {
+    if (!Array.isArray(messages) || messages.length === 0 || !noteSlug) {
       return NextResponse.json(
-        { error: "Missing messages array" },
-        { status: 400 },
-      )
-    }
-
-    if (!noteSlug || typeof noteSlug !== "string") {
-      return NextResponse.json(
-        { error: "Missing noteSlug" },
+        { error: "Missing messages array or noteSlug" },
         { status: 400 },
       )
     }
 
     const apiKey = process.env.OPENAI_API_KEY
     if (!apiKey) {
-      console.error("Missing OPENAI_API_KEY")
       return NextResponse.json(
-        { error: "Server misconfigured" },
+        { error: "OpenAI API key is missing or misconfigured" },
         { status: 500 },
       )
     }
     const openai = new OpenAI({ apiKey })
-    const note = getNoteBySlug(noteSlug)
+    const note = await getNoteBySlug(noteSlug)
     const noteContent = note?.content ?? ""
 
     const limitedMessages: ChatMessage[] = messages.slice(-10)
@@ -43,7 +35,7 @@ export async function POST(req: Request) {
       {
         role: "system",
         content:
-          "You are Neural Vault, an AI assistant that answers based primarily on the user's note content and the ongoing conversation. Be concise and practical.",
+          "You are Neural Vault, an AI assistant that answers based on the current note content and the ongoing conversation. Be concise and practical.",
       },
     ]
 
@@ -76,7 +68,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("Chat error:", err)
     return NextResponse.json(
-      { error: "Error talking to OpenAI" },
+      { error: "Error talking to Neural Vault API" },
       { status: 500 },
     )
   }

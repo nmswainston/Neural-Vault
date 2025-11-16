@@ -1,15 +1,16 @@
 import { notFound } from "next/navigation"
 import { getNoteBySlug } from "@/lib/notes"
+import { renderMarkdown } from "@/lib/simpleMarkdown"
 import DeleteNoteButton from "@/app/notes/_components/DeleteNoteButton"
 
 type PageProps = {
-  params: Promise<{
+  params: {
     slug: string[]
-  }>
+  }
 }
 
 export default async function NotePage({ params }: PageProps) {
-  const { slug } = await params
+  const { slug } = params
   const combinedSlug = Array.isArray(slug) ? slug.join("/") : slug
   const note = await getNoteBySlug(combinedSlug)
 
@@ -31,9 +32,15 @@ export default async function NotePage({ params }: PageProps) {
           <DeleteNoteButton slug={note.slug} />
         </div>
       </div>
-      <pre className="whitespace-pre-wrap text-sm text-slate-200">
-        {note.content}
-      </pre>
+      {(() => {
+        const html = renderMarkdown(note.content)
+        return (
+          <div
+            className="prose prose-invert max-w-none text-sm"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        )
+      })()}
     </main>
   )
 }

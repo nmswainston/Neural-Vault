@@ -4,10 +4,10 @@ import { deleteNote, getNoteBySlug, updateNote } from "@/lib/notes"
 // PUT /api/notes/[...slug]
 export async function PUT(
 	request: Request,
-	{ params }: { params: Promise<{ slug: string[] }> },
+	{ params }: { params: { slug: string[] } },
 ) {
 	try {
-		const { slug } = await params
+		const { slug } = params
 		const combinedSlug = Array.isArray(slug) ? slug.join("/") : ""
 		if (!combinedSlug) {
 			return NextResponse.json({ error: "Invalid slug" }, { status: 400 })
@@ -37,10 +37,10 @@ export async function PUT(
 // DELETE /api/notes/[...slug]
 export async function DELETE(
 	_request: Request,
-	{ params }: { params: Promise<{ slug: string[] }> },
+	{ params }: { params: { slug: string[] } },
 ) {
 	try {
-		const { slug } = await params
+		const { slug } = params
 		const combinedSlug = Array.isArray(slug) ? slug.join("/") : ""
 		if (!combinedSlug) {
 			return NextResponse.json({ error: "Invalid slug" }, { status: 400 })

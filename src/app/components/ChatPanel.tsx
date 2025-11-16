@@ -13,11 +13,17 @@ export default function ChatPanel() {
   const [input, setInput] = useState("")
   const [pending, setPending] = useState(false)
 
-  const pathname = usePathname()
-  const slug =
-    pathname && pathname.startsWith("/notes/")
-      ? pathname.split("/")[2]
-      : null
+	const pathname = usePathname() ?? ""
+
+	let slug: string | null = null
+	if (pathname.startsWith("/notes/")) {
+		const rest = pathname.replace(/^\/notes\//, "")
+		// Don’t run chat on /notes/new or /notes/edit/...
+		if (rest && !rest.startsWith("new") && !rest.startsWith("edit")) {
+			// strip any querystring just in case
+			slug = rest.split("?")[0]
+		}
+	}
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault()
