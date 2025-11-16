@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation"
-import { getAllNotes } from "@/data/notes"
+import { getAllNotes } from "@/lib/notes"
 
-export default function HomePage() {
-  const notes = getAllNotes()
+export default async function HomePage() {
+  const notes = await getAllNotes()
 
   if (!notes.length) {
     return (

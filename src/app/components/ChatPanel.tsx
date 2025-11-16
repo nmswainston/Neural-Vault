@@ -98,6 +98,8 @@ export default function ChatPanel() {
       <form onSubmit={handleSend} className="mt-3 flex gap-2">
         <input
           type="text"
+          id="chat-message"
+          name="chatMessage"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask Neural Vault about this note…"
