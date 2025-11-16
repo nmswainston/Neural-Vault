@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Neural Vault
+
+Neural Vault is a Next.js app that combines an AI chat interface with a file-backed Markdown notes system.
+
+- **AI chat**: Chat with an LLM via the `/api/chat` route and the `ChatPanel` UI.
+- **Notes vault**: Create, view, edit, and delete Markdown/MDX notes stored under the `content/notes` directory.
+- **Rich note display**: Notes support frontmatter metadata (title, tags, timestamps) and are rendered as HTML with basic Markdown formatting.
+- **File-based storage**: Notes are backed by the filesystem via the utilities in `src/lib/notes.ts`.
+
+The app’s home page loads your notes and redirects to the first available note. Individual note pages support editing and deletion, and there are dedicated routes for creating and editing notes.
+
+## Features
+
+- **Notes**
+  - Browse and read notes from `content/notes` (supports nested folders).
+  - Create new notes with title, slug, content, and optional tags.
+  - Update and delete existing notes via UI and corresponding API routes.
+  - Store metadata (frontmatter) such as `title`, `slug`, `tags`, `createdAt`, and `updatedAt`.
+- **Chat**
+  - Chat UI component for interacting with an AI model.
+  - Server-side chat route (`src/app/api/chat/route.ts`) for handling chat requests.
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org) (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS (via `globals.css`)
+- **Markdown + frontmatter**: `gray-matter` + custom renderer (`src/lib/simpleMarkdown.ts`)
+
+## Project Structure (high level)
+
+- `src/app/page.tsx`: Loads notes and redirects to the first note.
+- `src/app/notes/[...slug]/page.tsx`: Displays an individual note with actions to edit/delete.
+- `src/app/notes/new/page.tsx`: New note creation page.
+- `src/app/notes/edit/[...slug]/page.tsx`: Edit note page.
+- `src/app/api/notes/`: REST-style API routes for CRUD operations on notes.
+- `src/app/api/chat/route.ts`: API route for AI chat.
+- `src/app/components/ChatPanel.tsx`: Main chat UI component.
+- `src/app/components/Sidebar.tsx` / `SidebarClient.tsx`: Navigation/sidebar components for notes.
+- `src/lib/notes.ts`: File-based notes utilities (get, list, create, update, delete).
+- `src/lib/simpleMarkdown.ts`: Simple Markdown-to-HTML renderer for note content.
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Notes Storage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Notes live under the `content/notes` directory and are stored as `.mdx` or `.md` files with frontmatter. Example:
 
-## Learn More
+```md
+---
+title: "My first note"
+slug: "my-first-note"
+tags:
+  - example
+  - demo
+createdAt: "2025-01-01T00:00:00.000Z"
+updatedAt: "2025-01-01T00:00:00.000Z"
+---
 
-To learn more about Next.js, take a look at the following resources:
+This is the **content** of the note.
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev`: Start the development server.
+- `npm run build`: Build the production bundle.
+- `npm run start`: Start the production server.
+- `npm run lint`: Run lint checks.

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import Sidebar from "./components/Sidebar"
 import ChatPanel from "./components/ChatPanel"
+import GlobalVaultSearch from "../components/GlobalVaultSearch"
 
 export const metadata: Metadata = {
   title: "Neural Vault",
@@ -21,6 +22,7 @@ export default function RootLayout({
           <main className="flex-1 overflow-hidden">{children}</main>
           <ChatPanel />
         </div>
+        <GlobalVaultSearch />
       </body>
     </html>
   )
