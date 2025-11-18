@@ -4,13 +4,13 @@ import EditNoteForm from "@/app/notes/_components/EditNoteForm"
 import DeleteNoteButton from "@/app/notes/_components/DeleteNoteButton"
 
 type PageProps = {
-	params: {
+	params: Promise<{
 		slug: string[]
-	}
+	}>
 }
 
 export default async function EditNotePage({ params }: PageProps) {
-	const { slug } = params
+	const { slug } = await params
 	const combinedSlug = Array.isArray(slug) ? slug.join("/") : slug
 	const note = await getNoteBySlug(combinedSlug)
 
@@ -19,7 +19,7 @@ export default async function EditNotePage({ params }: PageProps) {
 	}
 
 	return (
-		<main className="max-w-3xl mx-auto h-full flex flex-col gap-4 p-6">
+		<main className="max-w-3xl mx-auto h-full flex flex-col gap-4 p-6 overflow-y-auto">
 			<div className="rounded-xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl space-y-6 dark:border-slate-800/80 dark:bg-slate-950/80 dark:shadow-black/60">
 				{/* Header */}
 				<div>

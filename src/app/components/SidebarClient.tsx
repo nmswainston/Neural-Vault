@@ -36,7 +36,7 @@ export default function SidebarClient({ notes }: SidebarClientProps) {
   })
 
   return (
-    <aside className="w-64 border-r border-slate-200 bg-slate-50 backdrop-blur-xl shadow-lg rounded-r-xl dark:border-slate-800/70 dark:bg-slate-900/70 dark:shadow-xl dark:shadow-black/40 dark:ring-1 dark:ring-slate-800/50 flex flex-col h-full">
+    <aside className="w-64 border-r border-slate-200 bg-slate-50 backdrop-blur-xl shadow-lg dark:border-slate-800/70 dark:bg-slate-900/70 dark:shadow-xl dark:shadow-black/40 dark:ring-1 dark:ring-slate-800/50 flex flex-col h-screen shrink-0">
       {/* Header / Brand area */}
       <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 dark:border-slate-800/70">
         <div className="flex-1">

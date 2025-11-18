@@ -102,7 +102,7 @@ export default function ChatPanel() {
         </button>
       )}
       
-      <section className={`w-80 flex h-full flex-col rounded-xl border border-slate-200/80 bg-slate-50/85 shadow-2xl shadow-black/20 backdrop-blur-xl overflow-hidden dark:border-slate-800/80 dark:bg-slate-950/85 dark:shadow-black/60 fixed md:relative inset-y-0 right-0 z-40 transition-transform duration-300 ${
+      <section className={`w-80 flex h-screen flex-col border-l border-slate-200/80 bg-slate-50/85 backdrop-blur-xl overflow-hidden dark:border-slate-800/80 dark:bg-slate-950/85 fixed md:relative inset-y-0 right-0 z-0 md:z-0 transition-transform duration-300 shrink-0 ${
         isMobile ? (isOpen ? "translate-x-0" : "translate-x-full") : ""
       }`}>
       {/* Sticky header */}

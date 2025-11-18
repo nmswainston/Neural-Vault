@@ -67,7 +67,7 @@ export default function NewNotePage() {
 	}
 
 	return (
-		<main className="max-w-3xl mx-auto h-full flex flex-col gap-4 p-6">
+		<main className="max-w-3xl mx-auto h-full flex flex-col gap-4 p-6 overflow-y-auto">
 			<div className="rounded-xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl space-y-6 dark:border-slate-800/80 dark:bg-slate-950/80 dark:shadow-black/60">
 				{/* Header */}
 				<div>

@@ -53,9 +53,9 @@ export default function RootLayout({
           {/* Vignette overlay for dark mode */}
           <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,#0f172a_0,transparent_55%)] opacity-0 dark:opacity-60 transition-opacity" />
           
-          <div className="flex min-h-screen relative">
+          <div className="flex h-screen relative overflow-hidden">
             <Sidebar />
-            <main className="flex-1 overflow-hidden">{children}</main>
+            <main className="flex-1 overflow-hidden min-w-0 relative z-10">{children}</main>
             <ChatPanel />
           </div>
           <GlobalVaultSearch />
