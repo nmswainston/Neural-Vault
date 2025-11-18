@@ -40,7 +40,7 @@ export default function SidebarClient({ notes }: SidebarClientProps) {
       {/* Header / Brand area */}
       <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 dark:border-slate-800/70">
         <div className="flex-1">
-          <h1 className="text-xl md:text-2xl font-semibold tracking-tight bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-300 bg-clip-text text-transparent dark:from-sky-400 dark:via-cyan-300 dark:to-emerald-300">
+          <h1 className="text-xl md:text-2xl font-semibold tracking-tight bg-linear-to-r from-sky-400 via-cyan-300 to-emerald-300 bg-clip-text text-transparent dark:from-sky-400 dark:via-cyan-300 dark:to-emerald-300">
             Neural Vault
           </h1>
           <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Your private AI-ready notes hub.</p>

@@ -40,8 +40,8 @@ export default function GlobalVaultSearch() {
         throw new Error(data?.error || "Request failed")
       }
       setResult(data)
-    } catch (err: any) {
-      setError(err?.message || "Something went wrong")
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong")
     } finally {
       setLoading(false)
     }
@@ -50,7 +50,7 @@ export default function GlobalVaultSearch() {
   return (
     <>
       {/* Compact search input anchored near top-right */}
-      <div className="pointer-events-none fixed top-3 right-[21rem] z-40">
+      <div className="pointer-events-none fixed top-3 right-84 z-40">
         <form
           onSubmit={onSubmit}
           className="pointer-events-auto flex items-center gap-2 rounded-md border border-slate-300/80 bg-white/80 backdrop-blur-md px-2 py-1 text-xs shadow-md dark:border-slate-800/80 dark:bg-slate-950/80 dark:shadow-black/40 transition-all duration-150"
