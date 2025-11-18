@@ -72,10 +72,10 @@ export default function NewNotePage() {
 
 			<form onSubmit={onSubmit} className="space-y-4">
 				<div>
-					<label className="mb-1 block text-sm text-slate-300">Title</label>
+					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Title</label>
 					<input
 						type="text"
-						className="w-full rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-700"
+						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 						required
@@ -83,10 +83,10 @@ export default function NewNotePage() {
 				</div>
 
 				<div>
-					<label className="mb-1 block text-sm text-slate-300">Project</label>
+					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Project</label>
 					<input
 						type="text"
-						className="w-full rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-700"
+						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
 						value={project}
 						onChange={(e) => setProject(e.target.value)}
 						placeholder="e.g. research-lab"
@@ -95,10 +95,10 @@ export default function NewNotePage() {
 				</div>
 
 				<div>
-					<label className="mb-1 block text-sm text-slate-300">Note slug (optional)</label>
+					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Note slug (optional)</label>
 					<input
 						type="text"
-						className="w-full rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-700"
+						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
 						value={noteSlug}
 						onChange={(e) => setNoteSlug(e.target.value)}
 						placeholder="defaults to slugified title if empty"
@@ -106,10 +106,10 @@ export default function NewNotePage() {
 				</div>
 
 				<div>
-					<label className="mb-1 block text-sm text-slate-300">Tags (comma separated)</label>
+					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Tags (comma separated)</label>
 					<input
 						type="text"
-						className="w-full rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-700"
+						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
 						value={tags}
 						onChange={(e) => setTags(e.target.value)}
 						placeholder="e.g. ai, research, draft"
@@ -117,21 +117,21 @@ export default function NewNotePage() {
 				</div>
 
 				<div>
-					<label className="mb-1 block text-sm text-slate-300">Content</label>
+					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Content</label>
 					<textarea
-						className="min-h-[240px] w-full rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-700"
+						className="min-h-[240px] w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
 						value={content}
 						onChange={(e) => setContent(e.target.value)}
 						required
 					/>
 				</div>
 
-				{error ? <p className="text-sm text-red-400">{error}</p> : null}
+				{error ? <p className="text-sm text-red-600 dark:text-red-400">{error}</p> : null}
 
 				<button
 					type="submit"
 					disabled={isPending}
-					className="rounded-md bg-slate-200 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-white disabled:opacity-50"
+					className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-white"
 				>
 					{isPending ? "Creating..." : "+ Create note"}
 				</button>

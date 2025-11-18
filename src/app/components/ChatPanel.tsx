@@ -74,14 +74,14 @@ export default function ChatPanel() {
   }
 
   return (
-    <section className="w-80 border-l border-slate-800 bg-slate-900/60 p-4 flex flex-col">
+    <section className="w-80 border-l border-slate-200 bg-slate-100/60 p-4 flex flex-col dark:border-slate-800 dark:bg-slate-900/60">
       <h2 className="mb-2 text-sm font-semibold tracking-tight">
         Neural Chat
       </h2>
 
-      <div className="flex-1 rounded-md border border-slate-800 bg-slate-950/60 p-2 text-xs text-slate-200 overflow-y-auto space-y-2">
+      <div className="flex-1 rounded-md border border-slate-300 bg-white/60 p-2 text-xs text-slate-900 overflow-y-auto space-y-2 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-200">
         {messages.length === 0 && (
-          <p className="text-slate-500">
+          <p className="text-slate-600 dark:text-slate-500">
             Ask a question about the current note and I&apos;ll use its
             content to answer.
           </p>
@@ -92,8 +92,8 @@ export default function ChatPanel() {
             key={i}
             className={`p-2 rounded-md ${
               m.role === "user"
-                ? "bg-slate-800 text-sky-300"
-                : "bg-slate-700 text-slate-100"
+                ? "bg-sky-100 text-sky-900 dark:bg-slate-800 dark:text-sky-300"
+                : "bg-slate-200 text-slate-900 dark:bg-slate-700 dark:text-slate-100"
             }`}
           >
             {m.content}
@@ -109,12 +109,12 @@ export default function ChatPanel() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask Neural Vault about this note…"
-          className="flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs outline-none focus:border-sky-500"
+          className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-sky-400"
         />
         <button
           type="submit"
           disabled={pending}
-          className="rounded-md bg-slate-700 px-3 py-2 text-xs text-slate-50 disabled:opacity-60"
+          className="rounded-md bg-slate-700 px-3 py-2 text-xs text-white disabled:opacity-60 hover:bg-slate-600 dark:bg-slate-600 dark:hover:bg-slate-500"
         >
           {pending ? "..." : "Send"}
         </button>

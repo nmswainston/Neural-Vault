@@ -20,12 +20,19 @@ export default async function NotePage({ params }: PageProps) {
 
   return (
     <main className="mx-auto max-w-3xl p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{note.title}</h1>
+      <div className="mb-4 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">{note.title}</h1>
+          {note.updatedAt && (
+            <p className="mt-1 text-[11px] text-slate-600 dark:text-slate-500">
+              Last updated {new Date(note.updatedAt).toLocaleDateString()}
+            </p>
+          )}
+        </div>
         <div className="flex gap-2">
           <a
             href={`/notes/edit/${note.slug}`}
-            className="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
+            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
           >
             Edit
           </a>
@@ -36,7 +43,7 @@ export default async function NotePage({ params }: PageProps) {
         const html = renderMarkdown(note.content)
         return (
           <div
-            className="prose prose-invert max-w-none text-sm"
+            className="prose prose-slate max-w-none text-sm dark:prose-invert"
             dangerouslySetInnerHTML={{ __html: html }}
           />
         )

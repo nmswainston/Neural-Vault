@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack --disable-source-maps",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
-    "js": "^0.1.0",
     "next": "^16.0.3",
     "openai": "^6.9.0",
     "react": "19.2.0",

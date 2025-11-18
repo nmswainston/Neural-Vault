@@ -50,10 +50,10 @@ export default function EditNoteForm({ initial }: EditNoteFormProps) {
 	return (
 		<form onSubmit={onSubmit} className="space-y-4">
 			<div>
-				<label className="mb-1 block text-sm text-slate-300">Title</label>
+				<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Title</label>
 				<input
 					type="text"
-					className="w-full rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-700"
+					className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
 					required
@@ -61,39 +61,39 @@ export default function EditNoteForm({ initial }: EditNoteFormProps) {
 			</div>
 
 			<div>
-				<label className="mb-1 block text-sm text-slate-300">Tags (comma separated)</label>
+				<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Tags (comma separated)</label>
 				<input
 					type="text"
-					className="w-full rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-700"
+					className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
 					value={tags}
 					onChange={(e) => setTags(e.target.value)}
 				/>
 			</div>
 
 			<div>
-				<label className="mb-1 block text-sm text-slate-300">Content</label>
+				<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Content</label>
 				<textarea
-					className="min-h-[240px] w-full rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-700"
+					className="min-h-[240px] w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
 					required
 				/>
 			</div>
 
-			{error ? <p className="text-sm text-red-400">{error}</p> : null}
+			{error ? <p className="text-sm text-red-600 dark:text-red-400">{error}</p> : null}
 
 			<div className="flex gap-3">
 				<button
 					type="submit"
 					disabled={isPending}
-					className="rounded-md bg-slate-200 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-white disabled:opacity-50"
+					className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-white"
 				>
 					{isPending ? "Saving..." : "Save changes"}
 				</button>
 				<button
 					type="button"
 					onClick={() => router.push(`/notes/${initial.slug}`)}
-					className="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
+					className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
 				>
 					Cancel
 				</button>
