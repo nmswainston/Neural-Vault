@@ -68,14 +68,18 @@ export default function NewNotePage() {
 
 	return (
 		<main className="mx-auto max-w-3xl p-6">
-			<h1 className="mb-4 text-2xl font-semibold">New note</h1>
+			<div className="rounded-xl border border-slate-200 bg-slate-50 backdrop-blur-xl p-6 shadow-lg dark:border-slate-800/70 dark:bg-slate-900/70 dark:shadow-xl dark:shadow-black/40 dark:ring-1 dark:ring-slate-800/50">
+				<div className="mb-6">
+					<h1 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">New note</h1>
+					<p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Capture a new memory in your Neural Vault.</p>
+				</div>
 
-			<form onSubmit={onSubmit} className="space-y-4">
+				<form onSubmit={onSubmit} className="space-y-4">
 				<div>
-					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Title</label>
+					<label className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Title</label>
 					<input
 						type="text"
-						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
+						className="w-full rounded-md bg-white border border-slate-300 text-sm px-3 py-2 text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:bg-slate-950/60 dark:border-slate-700/70 dark:text-slate-200"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 						required
@@ -83,10 +87,10 @@ export default function NewNotePage() {
 				</div>
 
 				<div>
-					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Project</label>
+					<label className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Project</label>
 					<input
 						type="text"
-						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
+						className="w-full rounded-md bg-white border border-slate-300 text-sm px-3 py-2 text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:bg-slate-950/60 dark:border-slate-700/70 dark:text-slate-200"
 						value={project}
 						onChange={(e) => setProject(e.target.value)}
 						placeholder="e.g. research-lab"
@@ -95,10 +99,10 @@ export default function NewNotePage() {
 				</div>
 
 				<div>
-					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Note slug (optional)</label>
+					<label className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Note slug (optional)</label>
 					<input
 						type="text"
-						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
+						className="w-full rounded-md bg-white border border-slate-300 text-sm px-3 py-2 text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:bg-slate-950/60 dark:border-slate-700/70 dark:text-slate-200"
 						value={noteSlug}
 						onChange={(e) => setNoteSlug(e.target.value)}
 						placeholder="defaults to slugified title if empty"
@@ -106,10 +110,10 @@ export default function NewNotePage() {
 				</div>
 
 				<div>
-					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Tags (comma separated)</label>
+					<label className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Tags (comma separated)</label>
 					<input
 						type="text"
-						className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
+						className="w-full rounded-md bg-white border border-slate-300 text-sm px-3 py-2 text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:bg-slate-950/60 dark:border-slate-700/70 dark:text-slate-200"
 						value={tags}
 						onChange={(e) => setTags(e.target.value)}
 						placeholder="e.g. ai, research, draft"
@@ -117,9 +121,9 @@ export default function NewNotePage() {
 				</div>
 
 				<div>
-					<label className="mb-1 block text-sm text-slate-700 dark:text-slate-300">Content</label>
+					<label className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Content</label>
 					<textarea
-						className="min-h-[240px] w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:focus:ring-slate-700"
+						className="min-h-[260px] w-full rounded-md bg-white border border-slate-300 font-mono text-sm px-3 py-2 text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:bg-slate-950/70 dark:border-slate-700/70 dark:text-slate-200"
 						value={content}
 						onChange={(e) => setContent(e.target.value)}
 						required
@@ -131,11 +135,12 @@ export default function NewNotePage() {
 				<button
 					type="submit"
 					disabled={isPending}
-					className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-white"
+					className="inline-flex items-center gap-1 rounded-md bg-sky-600 hover:bg-sky-500 text-xs font-medium text-white px-3 py-2 shadow-lg shadow-sky-600/30 transition-all duration-150 hover:translate-y-[0.5px] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 disabled:opacity-50 dark:bg-sky-600 dark:hover:bg-sky-500 dark:shadow-sky-600/30"
 				>
 					{isPending ? "Creating..." : "+ Create note"}
 				</button>
 			</form>
+			</div>
 		</main>
 	)
 }

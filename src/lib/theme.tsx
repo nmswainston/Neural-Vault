@@ -53,14 +53,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!mountedRef.current) return
 
-    console.log("Theme changed to:", theme)
     const root = document.documentElement
     if (theme === "dark") {
       root.classList.add("dark")
-      console.log("Added 'dark' class to html")
     } else {
       root.classList.remove("dark")
-      console.log("Removed 'dark' class from html")
     }
     localStorage.setItem("theme", theme)
   }, [theme])
@@ -70,11 +67,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }
 
   const toggleTheme = () => {
-    setThemeState((prev) => {
-      const newTheme = prev === "dark" ? "light" : "dark"
-      console.log("Toggling theme from", prev, "to", newTheme)
-      return newTheme
-    })
+    setThemeState((prev) => (prev === "dark" ? "light" : "dark"))
   }
 
   return (

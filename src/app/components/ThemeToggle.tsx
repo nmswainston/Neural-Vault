@@ -18,7 +18,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+      className="flex items-center gap-2 rounded-md border border-slate-300 bg-white/90 backdrop-blur-sm px-3 py-1.5 text-xs text-slate-900 transition-all duration-150 hover:bg-slate-50 hover:translate-y-[0.5px] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 shadow-sm dark:border-slate-700/70 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700/70 dark:shadow-[0_0_12px_rgba(59,130,246,0.2)] dark:hover:shadow-[0_0_16px_rgba(59,130,246,0.3)]"
       aria-label={`Switch to ${displayTheme === "dark" ? "light" : "dark"} mode`}
       title={`Switch to ${displayTheme === "dark" ? "light" : "dark"} mode`}
     >
