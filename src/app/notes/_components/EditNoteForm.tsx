@@ -10,9 +10,10 @@ type EditNoteFormProps = {
 		content: string
 		tags: string[]
 	}
+	deleteButton?: React.ReactNode
 }
 
-export default function EditNoteForm({ initial }: EditNoteFormProps) {
+export default function EditNoteForm({ initial, deleteButton }: EditNoteFormProps) {
 	const router = useRouter()
 	const [isPending, startTransition] = useTransition()
 
@@ -48,32 +49,41 @@ export default function EditNoteForm({ initial }: EditNoteFormProps) {
 	}
 
 	return (
-		<form onSubmit={onSubmit} className="space-y-4">
-			<div>
-				<label className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Title</label>
+		<form onSubmit={onSubmit} className="space-y-6">
+			<div className="space-y-1">
+				<label className="block text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-300">
+					Title
+				</label>
 				<input
 					type="text"
-					className="w-full rounded-md bg-white border border-slate-300 text-sm px-3 py-2 text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:bg-slate-950/60 dark:border-slate-700/70 dark:text-slate-200"
+					className="w-full rounded-md border border-slate-300/80 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-shadow dark:border-slate-700/80 dark:bg-slate-950/80 dark:text-slate-100 dark:placeholder:text-slate-500"
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
 					required
 				/>
 			</div>
 
-			<div>
-				<label className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Tags (comma separated)</label>
+			<div className="space-y-1">
+				<label className="block text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-300">
+					Tags (comma separated)
+				</label>
+				<p className="text-[11px] text-slate-500 dark:text-slate-500">
+					Separate multiple tags with commas
+				</p>
 				<input
 					type="text"
-					className="w-full rounded-md bg-white border border-slate-300 text-sm px-3 py-2 text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:bg-slate-950/60 dark:border-slate-700/70 dark:text-slate-200"
+					className="w-full rounded-md border border-slate-300/80 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-shadow dark:border-slate-700/80 dark:bg-slate-950/80 dark:text-slate-100 dark:placeholder:text-slate-500"
 					value={tags}
 					onChange={(e) => setTags(e.target.value)}
 				/>
 			</div>
 
-			<div>
-				<label className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Content</label>
+			<div className="space-y-1">
+				<label className="block text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-300">
+					Content
+				</label>
 				<textarea
-					className="min-h-[260px] w-full rounded-md bg-white border border-slate-300 font-mono text-sm px-3 py-2 text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:bg-slate-950/70 dark:border-slate-700/70 dark:text-slate-200"
+					className="min-h-[220px] w-full rounded-md border border-slate-300/80 bg-white/80 px-3 py-2 font-mono text-sm text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-shadow dark:border-slate-700/80 dark:bg-slate-950/80 dark:text-slate-100 dark:placeholder:text-slate-500"
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
 					required
@@ -82,21 +92,27 @@ export default function EditNoteForm({ initial }: EditNoteFormProps) {
 
 			{error ? <p className="text-sm text-red-600 dark:text-red-400">{error}</p> : null}
 
-			<div className="flex gap-3">
-				<button
-					type="submit"
-					disabled={isPending}
-					className="inline-flex items-center gap-1 rounded-md bg-sky-600 hover:bg-sky-500 text-xs font-medium text-white px-3 py-2 shadow-lg shadow-sky-600/30 transition-all duration-150 hover:translate-y-[0.5px] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 disabled:opacity-50 dark:bg-sky-600 dark:hover:bg-sky-500 dark:shadow-sky-600/30"
-				>
-					{isPending ? "Saving..." : "Save changes"}
-				</button>
-				<button
-					type="button"
-					onClick={() => router.push(`/notes/${initial.slug}`)}
-					className="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-900 transition-all duration-150 hover:bg-slate-50 hover:translate-y-[0.5px] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 dark:border-slate-700/70 dark:bg-slate-800/70 dark:text-slate-200 dark:hover:bg-slate-700/70"
-				>
-					Cancel
-				</button>
+			{/* Footer with buttons */}
+			<div className="flex items-center justify-between pt-2 border-t border-slate-300/70 dark:border-slate-800/70 mt-2">
+				<div>
+					{deleteButton}
+				</div>
+				<div className="flex gap-3">
+					<button
+						type="button"
+						onClick={() => router.push(`/notes/${initial.slug}`)}
+						className="rounded-md border border-slate-300/80 bg-white/80 px-3 py-1.5 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition-colors active:scale-[0.97] dark:border-slate-700/70 dark:bg-slate-900/80 dark:text-slate-300 dark:hover:bg-slate-800/80"
+					>
+						Cancel
+					</button>
+					<button
+						type="submit"
+						disabled={isPending}
+						className="inline-flex items-center gap-1 rounded-md bg-sky-600 hover:bg-sky-500 px-4 py-2 text-xs font-medium text-white shadow-lg shadow-sky-600/30 transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed"
+					>
+						{isPending ? "Saving..." : "Save changes"}
+					</button>
+				</div>
 			</div>
 		</form>
 	)

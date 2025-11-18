@@ -50,7 +50,7 @@ export default function GlobalVaultSearch() {
   return (
     <>
       {/* Compact search input anchored near top-right */}
-      <div className="pointer-events-none fixed top-3 right-84 z-40">
+      <div className="pointer-events-none fixed top-3 right-3 md:right-84 z-40">
         <form
           onSubmit={onSubmit}
           className="pointer-events-auto flex items-center gap-2 rounded-md border border-slate-300/80 bg-white/80 backdrop-blur-md px-2 py-1 text-xs shadow-md dark:border-slate-800/80 dark:bg-slate-950/80 dark:shadow-black/40 transition-all duration-150"
@@ -62,7 +62,7 @@ export default function GlobalVaultSearch() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Ask the Vault…"
-            className="w-52 bg-transparent text-xs text-slate-900 placeholder:text-slate-500 outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:text-slate-200"
+            className="w-40 md:w-52 bg-transparent text-xs text-slate-900 placeholder:text-slate-500 outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 transition-all duration-150 dark:text-slate-200"
           />
           <button
             type="submit"
@@ -75,7 +75,7 @@ export default function GlobalVaultSearch() {
 
       {/* Result drawer */}
       <div
-        className={`fixed inset-y-3 right-3 z-50 w-[360px] md:w-[400px] rounded-xl border border-slate-200/80 bg-white/95 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden transition-transform duration-300 dark:border-slate-800/80 dark:bg-slate-950/95 dark:shadow-black/60 ${
+        className={`fixed inset-y-3 right-3 z-50 w-[calc(100%-1.5rem)] md:w-[360px] lg:w-[400px] rounded-xl border border-slate-200/80 bg-white/95 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden transition-transform duration-300 dark:border-slate-800/80 dark:bg-slate-950/95 dark:shadow-black/60 ${
           open ? "translate-x-0" : "translate-x-[calc(100%+0.75rem)]"
         }`}
         aria-hidden={!open}
@@ -124,7 +124,7 @@ export default function GlobalVaultSearch() {
                       <Link
                         key={slug}
                         href={`/notes/${slug}`}
-                        className="inline-flex items-center gap-1 rounded-full border border-slate-300/70 px-2 py-1 text-[11px] text-slate-700 hover:border-sky-500 hover:text-sky-600 transition-all duration-150 hover:translate-y-[0.5px] active:scale-[0.98] dark:border-slate-700/70 dark:text-slate-300 dark:hover:border-sky-500 dark:hover:text-sky-300"
+                        className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-300/70 px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-sky-50 hover:border-sky-400 hover:text-sky-700 transition-all duration-150 hover:translate-y-[0.5px] active:scale-[0.98] dark:bg-slate-800/60 dark:border-slate-700/70 dark:text-slate-300 dark:hover:bg-sky-950/50 dark:hover:border-sky-500 dark:hover:text-sky-300"
                         onClick={() => setOpen(false)}
                       >
                         {label}

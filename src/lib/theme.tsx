@@ -34,16 +34,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   })
   const mountedRef = useRef(false)
 
-  // Initialize DOM on mount
+  // Initialize DOM on mount (only if not already set by blocking script)
   useEffect(() => {
     if (!mountedRef.current) {
       mountedRef.current = true
-      // Sync initial theme to DOM on mount
+      // Sync initial theme to DOM on mount (script in layout should have already set it, but ensure it's correct)
       const root = document.documentElement
       const initialTheme = getInitialTheme()
-      if (initialTheme === "dark") {
+      const hasDark = root.classList.contains("dark")
+      if (initialTheme === "dark" && !hasDark) {
         root.classList.add("dark")
-      } else {
+      } else if (initialTheme === "light" && hasDark) {
         root.classList.remove("dark")
       }
     }

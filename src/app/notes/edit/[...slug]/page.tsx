@@ -19,14 +19,19 @@ export default async function EditNotePage({ params }: PageProps) {
 	}
 
 	return (
-		<main className="mx-auto max-w-3xl p-6">
-			<div className="rounded-xl border border-slate-200 bg-slate-50 backdrop-blur-xl p-6 shadow-lg dark:border-slate-800/70 dark:bg-slate-900/70 dark:shadow-xl dark:shadow-black/40 dark:ring-1 dark:ring-slate-800/50">
-				<div className="mb-6 flex items-start justify-between">
-					<div>
-						<h1 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">Edit note</h1>
-						<p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Refine this entry in your Neural Vault.</p>
+		<main className="max-w-3xl mx-auto h-full flex flex-col gap-4 p-6">
+			<div className="rounded-xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl space-y-6 dark:border-slate-800/80 dark:bg-slate-950/80 dark:shadow-black/60">
+				{/* Header */}
+				<div>
+					<div className="text-[10px] uppercase tracking-[0.25em] text-sky-500/80 dark:text-sky-400/80">
+						Edit entry
 					</div>
-					<DeleteNoteButton slug={note.slug} />
+					<h1 className="mt-1 text-xl md:text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+						Edit note
+					</h1>
+					<p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+						Refine this entry in your Neural Vault.
+					</p>
 				</div>
 				<EditNoteForm
 					initial={{
@@ -35,6 +40,7 @@ export default async function EditNotePage({ params }: PageProps) {
 						content: note.content,
 						tags: note.tags,
 					}}
+					deleteButton={<DeleteNoteButton slug={note.slug} />}
 				/>
 			</div>
 		</main>

@@ -36,7 +36,7 @@ export default function DeleteNoteButton({ slug, className }: DeleteNoteButtonPr
 				type="button"
 				onClick={onDelete}
 				disabled={isPending}
-				className="text-xs rounded-md border border-red-500/70 text-red-600 hover:bg-red-50 px-3 py-1.5 transition-all duration-150 hover:translate-y-[0.5px] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-0 disabled:opacity-50 dark:text-red-300 dark:hover:bg-red-500/10"
+				className="inline-flex items-center gap-1 rounded-md border border-red-500/70 px-3 py-1.5 text-[11px] text-red-600 hover:bg-red-50 hover:border-red-400 transition-colors active:scale-[0.97] disabled:opacity-50 dark:text-red-300 dark:hover:bg-red-500/10 dark:hover:border-red-400"
 			>
 				{isPending ? "Deleting..." : "Delete"}
 			</button>

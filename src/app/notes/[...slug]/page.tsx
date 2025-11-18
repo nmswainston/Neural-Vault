@@ -1,7 +1,6 @@
-import { notFound } from "next/navigation"
 import { getNoteBySlug } from "@/lib/notes"
 import { renderMarkdown } from "@/lib/simpleMarkdown"
-import DeleteNoteButton from "@/app/notes/_components/DeleteNoteButton"
+import Link from "next/link"
 
 type PageProps = {
   params: {
@@ -10,57 +9,105 @@ type PageProps = {
 }
 
 export default async function NotePage({ params }: PageProps) {
-  const { slug } = params
-  const combinedSlug = Array.isArray(slug) ? slug.join("/") : slug
-  const note = await getNoteBySlug(combinedSlug)
+  const { slug: slugArray } = params
+  const slug = slugArray.join("/")
+  const note = await getNoteBySlug(slug)
 
   if (!note) {
-    notFound()
+    return (
+      <main className="flex h-full items-center justify-center p-6">
+        <div className="rounded-xl border border-slate-800/70 bg-slate-950/80 px-6 py-4 text-sm text-slate-300 shadow-xl shadow-black/50 backdrop-blur-xl">
+          <p className="mb-2 font-medium">Note not found</p>
+          <p className="text-xs text-slate-400">
+            The requested entry could not be located in the vault.
+          </p>
+          <Link
+            href="/notes"
+            className="mt-3 inline-block text-xs text-sky-400 hover:text-sky-300 underline"
+          >
+            Return to notes
+          </Link>
+        </div>
+      </main>
+    )
   }
 
+  const createdAt = note.createdAt ? new Date(note.createdAt) : null
+  const updatedAt = note.updatedAt ? new Date(note.updatedAt) : null
+
+  let whenText = ""
+  if (updatedAt && createdAt) {
+    whenText = `Updated ${updatedAt.toLocaleDateString()} • Created ${createdAt.toLocaleDateString()}`
+  } else if (updatedAt) {
+    whenText = `Updated ${updatedAt.toLocaleDateString()}`
+  } else if (createdAt) {
+    whenText = `Created ${createdAt.toLocaleDateString()}`
+  }
+
+  const html = renderMarkdown(note.content)
+
   return (
-    <main className="mx-auto max-w-3xl p-6 h-full flex flex-col">
-      <div className="rounded-xl border border-slate-200 bg-slate-50 backdrop-blur-xl p-6 shadow-lg dark:border-slate-800/70 dark:bg-slate-900/70 dark:shadow-xl dark:shadow-black/40 dark:ring-1 dark:ring-slate-800/50 flex flex-col gap-4">
-        {/* Note header */}
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-              {note.title}
-            </h1>
-            <div className="mt-1 space-y-0.5">
-              {note.createdAt && (
-                <p className="text-[11px] text-slate-500 dark:text-slate-500">
-                  Created {new Date(note.createdAt).toLocaleDateString()}
-                </p>
-              )}
-              {note.updatedAt && (
-                <p className="text-[11px] text-slate-500 dark:text-slate-500">
-                  Last updated {new Date(note.updatedAt).toLocaleDateString()}
-                </p>
-              )}
-            </div>
+    <main className="mx-auto max-w-3xl h-full flex flex-col gap-4 p-6">
+      {/* Header section */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        {/* Left side */}
+        <div>
+          <div className="text-[10px] uppercase tracking-[0.25em] text-sky-400/80">
+            Vault entry
           </div>
-          <div className="flex gap-2">
-            <a
-              href={`/notes/edit/${note.slug}`}
-              className="inline-flex items-center gap-1 rounded-md bg-sky-600 hover:bg-sky-500 text-xs font-medium text-white px-3 py-2 shadow-lg shadow-sky-600/30 transition-all duration-150 hover:translate-y-[0.5px] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-0 dark:bg-sky-600 dark:hover:bg-sky-500 dark:shadow-sky-600/30"
-            >
-              Edit
-            </a>
-            <DeleteNoteButton slug={note.slug} />
+          <h1 className="mt-1 text-xl md:text-2xl font-semibold tracking-tight text-slate-50">
+            {note.title}
+          </h1>
+          {/* Metadata row */}
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-slate-400">
+            {whenText && (
+              <div className="flex items-center gap-2">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.9)]" />
+                <span>{whenText}</span>
+              </div>
+            )}
+            {note.tags && note.tags.length > 0 && (
+              <>
+                {note.tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="rounded-full border border-slate-700/80 bg-slate-950/80 px-2 py-0.5 text-[10px] uppercase tracking-wide text-slate-300"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </>
+            )}
           </div>
         </div>
 
-        {/* Note content */}
-        {(() => {
-          const html = renderMarkdown(note.content)
-          return (
-            <div
-              className="prose prose-slate max-w-none text-sm leading-relaxed prose-headings:text-slate-900 prose-headings:font-semibold prose-p:text-slate-700 prose-a:text-sky-600 prose-strong:text-slate-900 prose-code:text-emerald-700 prose-code:bg-slate-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-slate-100 prose-pre:border prose-pre:border-slate-300 dark:prose-invert dark:prose-headings:text-slate-100 dark:prose-p:text-slate-200 dark:prose-a:text-sky-400 dark:prose-strong:text-sky-100 dark:prose-code:text-emerald-300 dark:prose-code:bg-slate-950/80 dark:prose-pre:bg-slate-950/80 dark:prose-pre:border-slate-800"
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-          )
-        })()}
+        {/* Right side */}
+        <div>
+          <Link
+            href={`/notes/edit/${slug}`}
+            className="inline-flex items-center gap-1 rounded-md border border-slate-700/80 bg-slate-950/80 px-3 py-1.5 text-[11px] font-medium text-slate-100 shadow-sm shadow-black/40 transition-all duration-150 hover:border-sky-500/70 hover:text-sky-100 hover:shadow-sky-500/25 active:scale-[0.97]"
+          >
+            <span>✎</span>
+            <span>Edit</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Note content card */}
+      <div className="flex-1 overflow-y-auto rounded-xl border border-slate-800/80 bg-slate-950/80 p-5 shadow-2xl shadow-black/60 backdrop-blur-xl">
+        <div
+          className="
+            prose prose-invert max-w-none text-sm leading-relaxed
+            prose-headings:text-slate-100
+            prose-p:text-slate-200
+            prose-strong:text-sky-100
+            prose-a:text-sky-400 hover:prose-a:text-sky-300
+            prose-code:text-emerald-300
+            prose-pre:bg-slate-950/90 prose-pre:border prose-pre:border-slate-800/80
+            prose-li:marker:text-slate-400
+          "
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       </div>
     </main>
   )

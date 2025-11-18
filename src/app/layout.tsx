@@ -25,6 +25,30 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen bg-white text-slate-900 dark:bg-linear-to-b dark:from-slate-950 dark:via-slate-950 dark:to-black dark:text-slate-100`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function getInitialTheme() {
+                  const stored = localStorage.getItem('theme');
+                  if (stored === 'light' || stored === 'dark') {
+                    return stored;
+                  }
+                  if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    return 'light';
+                  }
+                  return 'dark';
+                }
+                const theme = getInitialTheme();
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              })();
+            `,
+          }}
+        />
         <ThemeProvider>
           {/* Vignette overlay for dark mode */}
           <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,#0f172a_0,transparent_55%)] opacity-0 dark:opacity-60 transition-opacity" />
