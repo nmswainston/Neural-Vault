@@ -19,7 +19,7 @@ export default async function NotePage({ params }: PageProps) {
   if (!note) {
     return (
       <main className="flex h-full items-center justify-center p-6">
-        <Card variant="outlined" className="px-6 py-4 text-sm text-slate-300 dark:text-slate-300">
+        <Card variant="outlined" className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
           <p className="mb-2 font-medium">Note not found</p>
           <p className="text-xs text-slate-400 dark:text-slate-400">
             The requested entry could not be located in the vault.

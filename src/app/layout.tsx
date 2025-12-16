@@ -25,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen bg-[var(--background)] text-slate-900 dark:bg-linear-to-b dark:from-slate-950 dark:via-slate-950 dark:to-black dark:text-slate-100`}>
+      <body className={`${inter.className} min-h-screen bg-background text-slate-900 dark:bg-linear-to-b dark:from-slate-950 dark:via-slate-950 dark:to-black dark:text-slate-100`}>
         <ThemeScript />
         <ThemeProvider>
           {/* Vignette overlay for dark mode */}
