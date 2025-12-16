@@ -62,48 +62,63 @@ function formatNote(slug: string, data: Record<string, unknown>, content: string
 }
 
 export async function getNoteBySlug(slug: string): Promise<Note | null> {
-  const segments = slugToSegments(slug)
-  if (!segments.length) {
+  try {
+    const segments = slugToSegments(slug)
+    if (!segments.length) {
+      return null
+    }
+
+    const normalizedSlug = joinSegments(segments)
+    const basePath = path.join(notesDirectory, ...segments)
+    const noteFile = await readNoteFile(basePath)
+
+    if (!noteFile) {
+      return null
+    }
+
+    const { data, content } = matter(noteFile.contents)
+
+    return formatNote(normalizedSlug, data, content)
+  } catch (error) {
+    console.error(`Error reading note with slug "${slug}":`, error)
     return null
   }
-
-  const normalizedSlug = joinSegments(segments)
-  const basePath = path.join(notesDirectory, ...segments)
-  const noteFile = await readNoteFile(basePath)
-
-  if (!noteFile) {
-    return null
-  }
-
-  const { data, content } = matter(noteFile.contents)
-
-  return formatNote(normalizedSlug, data, content)
 }
 
 export async function getAllNotes(): Promise<Note[]> {
   async function collectNotes(dir: string, slugParts: string[] = []): Promise<Note[]> {
-    const entries = await fs.readdir(dir, { withFileTypes: true })
-    const notes: Note[] = []
+    try {
+      const entries = await fs.readdir(dir, { withFileTypes: true })
+      const notes: Note[] = []
 
-    for (const entry of entries) {
-      if (entry.isDirectory()) {
-        const childNotes = await collectNotes(path.join(dir, entry.name), [...slugParts, entry.name])
-        notes.push(...childNotes)
-        continue
+      for (const entry of entries) {
+        if (entry.isDirectory()) {
+          try {
+            const childNotes = await collectNotes(path.join(dir, entry.name), [...slugParts, entry.name])
+            notes.push(...childNotes)
+          } catch (error) {
+            console.error(`Error reading directory "${entry.name}":`, error)
+            // Continue processing other entries
+          }
+          continue
+        }
+
+        if (!entry.isFile() || (!entry.name.endsWith(".mdx") && !entry.name.endsWith(".md"))) {
+          continue
+        }
+
+        const slug = joinSegments([...slugParts, entry.name.replace(/\.mdx?$/, "")])
+        const note = await getNoteBySlug(slug)
+        if (note) {
+          notes.push(note)
+        }
       }
 
-      if (!entry.isFile() || (!entry.name.endsWith(".mdx") && !entry.name.endsWith(".md"))) {
-        continue
-      }
-
-      const slug = joinSegments([...slugParts, entry.name.replace(/\.mdx?$/, "")])
-      const note = await getNoteBySlug(slug)
-      if (note) {
-        notes.push(note)
-      }
+      return notes
+    } catch (error) {
+      console.error(`Error reading directory "${dir}":`, error)
+      return []
     }
-
-    return notes
   }
 
   try {

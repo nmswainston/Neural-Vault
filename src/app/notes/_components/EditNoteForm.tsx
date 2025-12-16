@@ -2,6 +2,10 @@
 
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
+import { Input } from "@/components/ui/Input"
+import { Textarea } from "@/components/ui/Textarea"
+import { Button } from "@/components/ui/Button"
+import { parseTags } from "@/lib/utils"
 
 type EditNoteFormProps = {
 	initial: {
@@ -26,92 +30,76 @@ export default function EditNoteForm({ initial, deleteButton }: EditNoteFormProp
 		e.preventDefault()
 		setError(null)
 
-		const tagsArray = tags
-			.split(",")
-			.map((t) => t.trim())
-			.filter(Boolean)
+		const tagsArray = parseTags(tags)
 
-		const res = await fetch(`/api/notes/${initial.slug}`, {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ title, content, tags: tagsArray }),
-		})
+		try {
+			const res = await fetch(`/api/notes/${initial.slug}`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ title, content, tags: tagsArray }),
+			})
 
-		if (!res.ok) {
-		 const data = await res.json().catch(() => ({}))
-		 setError(data.error || "Failed to update note.")
-		 return
+			if (!res.ok) {
+				const data = await res.json().catch(() => ({}))
+				setError(data.error || "Failed to update note.")
+				return
+			}
+
+			startTransition(() => {
+				router.push(`/notes/${initial.slug}`)
+			})
+		} catch (err) {
+			setError(err instanceof Error ? err.message : "An unexpected error occurred.")
 		}
-
-		startTransition(() => {
-			router.push(`/notes/${initial.slug}`)
-		})
 	}
 
 	return (
 		<form onSubmit={onSubmit} className="space-y-6">
-			<div className="space-y-1">
-				<label className="block text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-300">
-					Title
-				</label>
-				<input
-					type="text"
-					className="w-full rounded-md border border-slate-300/80 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-shadow dark:border-slate-700/80 dark:bg-slate-950/80 dark:text-slate-100 dark:placeholder:text-slate-500"
-					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-					required
-				/>
-			</div>
+			<Input
+				label="Title"
+				value={title}
+				onChange={(e) => setTitle(e.target.value)}
+				required
+				error={error && !title ? "Title is required" : undefined}
+			/>
 
-			<div className="space-y-1">
-				<label className="block text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-300">
-					Tags (comma separated)
-				</label>
-				<p className="text-[11px] text-slate-500 dark:text-slate-500">
-					Separate multiple tags with commas
+			<Input
+				label="Tags"
+				helperText="Separate multiple tags with commas"
+				value={tags}
+				onChange={(e) => setTags(e.target.value)}
+				placeholder="e.g. ai, research, draft"
+			/>
+
+			<Textarea
+				label="Content"
+				value={content}
+				onChange={(e) => setContent(e.target.value)}
+				required
+				error={error && !content ? "Content is required" : undefined}
+			/>
+
+			{error && !error.includes("required") && (
+				<p className="text-sm text-red-600 dark:text-red-400" role="alert">
+					{error}
 				</p>
-				<input
-					type="text"
-					className="w-full rounded-md border border-slate-300/80 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-shadow dark:border-slate-700/80 dark:bg-slate-950/80 dark:text-slate-100 dark:placeholder:text-slate-500"
-					value={tags}
-					onChange={(e) => setTags(e.target.value)}
-				/>
-			</div>
-
-			<div className="space-y-1">
-				<label className="block text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-300">
-					Content
-				</label>
-				<textarea
-					className="min-h-[220px] w-full rounded-md border border-slate-300/80 bg-white/80 px-3 py-2 font-mono text-sm text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-shadow dark:border-slate-700/80 dark:bg-slate-950/80 dark:text-slate-100 dark:placeholder:text-slate-500"
-					value={content}
-					onChange={(e) => setContent(e.target.value)}
-					required
-				/>
-			</div>
-
-			{error ? <p className="text-sm text-red-600 dark:text-red-400">{error}</p> : null}
+			)}
 
 			{/* Footer with buttons */}
-			<div className="flex items-center justify-between pt-2 border-t border-slate-300/70 dark:border-slate-800/70 mt-2">
-				<div>
-					{deleteButton}
-				</div>
+			<div className="flex items-center justify-between pt-2 border-t border-slate-300 dark:border-slate-800 mt-2">
+				<div>{deleteButton}</div>
 				<div className="flex gap-3">
-					<button
+					<Button
 						type="button"
+						variant="secondary"
+						size="md"
 						onClick={() => router.push(`/notes/${initial.slug}`)}
-						className="rounded-md border border-slate-300/80 bg-white/80 px-3 py-1.5 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition-colors active:scale-[0.97] dark:border-slate-700/70 dark:bg-slate-900/80 dark:text-slate-300 dark:hover:bg-slate-800/80"
 					>
 						Cancel
-					</button>
-					<button
-						type="submit"
-						disabled={isPending}
-						className="inline-flex items-center gap-1 rounded-md bg-sky-600 hover:bg-sky-500 px-4 py-2 text-xs font-medium text-white shadow-lg shadow-sky-600/30 transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed"
-					>
-						{isPending ? "Saving..." : "Save changes"}
-					</button>
+					</Button>
+					<Button type="submit" size="md" isLoading={isPending}>
+						Save changes
+					</Button>
 				</div>
 			</div>
 		</form>

@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Cursor / AI tooling (local state only)
+.cursor/
+.cursor-cache/
+.cursor-tmp/
+.ai/
+.ai-cache/
+.prompt-cache/
+
+# Editor state
+.vscode/
+*.code-workspace
+
+# OS files
+Thumbs.db

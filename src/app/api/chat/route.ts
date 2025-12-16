@@ -25,6 +25,7 @@ export async function POST(req: Request) {
         { status: 500 },
       )
     }
+
     const openai = new OpenAI({ apiKey })
     const note = await getNoteBySlug(noteSlug)
     const noteContent = note?.content ?? ""
@@ -67,9 +68,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ reply })
   } catch (err) {
     console.error("Chat error:", err)
-    return NextResponse.json(
-      { error: "Error talking to Neural Vault API" },
-      { status: 500 },
-    )
+    const errorMessage =
+      err instanceof Error ? err.message : "Error talking to Neural Vault API"
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

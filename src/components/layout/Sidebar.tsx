@@ -6,3 +6,4 @@ export default async function Sidebar() {
 
   return <SidebarClient notes={notes} />
 }
+
