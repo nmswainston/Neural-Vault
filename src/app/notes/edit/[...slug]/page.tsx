@@ -5,13 +5,13 @@ import EditNoteForm from "@/app/notes/_components/EditNoteForm"
 import DeleteNoteButton from "@/app/notes/_components/DeleteNoteButton"
 
 type PageProps = {
-  params: Promise<{
+  params: {
     slug: string[]
-  }>
+  }
 }
 
 export default async function EditNotePage({ params }: PageProps) {
-  const { slug } = await params
+  const { slug } = params
   const combinedSlug = Array.isArray(slug) ? slug.join("/") : slug
   const note = await getNoteBySlug(combinedSlug)
 
@@ -47,5 +47,4 @@ export default async function EditNotePage({ params }: PageProps) {
     </main>
   )
 }
-
 

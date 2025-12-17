@@ -1,4 +1,4 @@
-import type { ChatMessage, Note } from "@/data/types"
+import type { Note } from "@/data/types"
 import { seedNotes } from "@/data/mock/notes"
 import { normalizeSlug } from "@/lib/utils"
 
@@ -30,7 +30,7 @@ function safeWriteNotes(notes: Note[]) {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(notes))
   } catch {
-    // ignore (storage full, private mode, etc.)
+    // ignore (storage full, private mode, private browsing, etc.)
   }
 }
 
@@ -133,40 +133,4 @@ export async function deleteNote(slug: string): Promise<void> {
 
   safeWriteNotes(next)
 }
-
-function summarize(text: string, maxLen: number) {
-  const cleaned = text.replace(/\s+/g, " ").trim()
-  if (cleaned.length <= maxLen) return cleaned
-  return cleaned.slice(0, maxLen).trimEnd() + "…"
-}
-
-export async function sendChatMessage(input: {
-  messages: ChatMessage[]
-  noteSlug: string
-}): Promise<{ reply: string }> {
-  await delay(randomDelay())
-  const note = await getNoteBySlug(input.noteSlug)
-  const lastUser = [...input.messages].reverse().find((m) => m.role === "user")?.content?.trim()
-  if (!lastUser) throw new Error("Missing user message")
-
-  if (!note) {
-    return {
-      reply:
-        "I can’t find that note in this demo vault. Try refreshing, or open a different note from the sidebar.",
-    }
-  }
-
-  const notePreview = note.content ? summarize(note.content, 360) : ""
-  const reply = [
-    `From **${note.title}**:`,
-    notePreview ? `- Context: ${notePreview}` : "- Context: (This note is empty.)",
-    `- Your question: ${summarize(lastUser, 180)}`,
-    "",
-    "Demo answer:",
-    "If you want, I can summarize the note, extract action items, or help rewrite a section—tell me which.",
-  ].join("\n")
-
-  return { reply }
-}
-
 

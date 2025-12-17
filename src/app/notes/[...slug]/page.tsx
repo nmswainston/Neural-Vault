@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { getNoteBySlug, getAllNotes } from "@/data/repo"
+import { useParams } from "next/navigation"
+import { getNoteBySlug } from "@/data/repo"
 import { renderMarkdown } from "@/lib/simpleMarkdown"
 import { formatDateRange, normalizeSlug } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
@@ -11,8 +11,7 @@ import Link from "next/link"
 import type { Note } from "@/data/types"
 
 export default function NotePage() {
-  const params = useParams()
-  const router = useRouter()
+  const params = useParams<{ slug?: string[] }>()
   const [note, setNote] = useState<Note | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
@@ -23,7 +22,7 @@ export default function NotePage() {
     ;(async () => {
       try {
         // Get slug from params (catch-all route: [...slug])
-        const slugArray = params.slug as string[]
+        const slugArray = params.slug
         if (!slugArray || !Array.isArray(slugArray) || slugArray.length === 0) {
           if (active) setNotFound(true)
           return
@@ -33,27 +32,10 @@ export default function NotePage() {
         const rawSlug = slugArray.join("/")
         const normalizedSlug = normalizeSlug(rawSlug)
 
-        if (process.env.NODE_ENV !== "production") {
-          console.log("[NotePage] Route params:", {
-            slugArray,
-            rawSlug,
-            normalizedSlug,
-          })
-        }
-
         // Try to find note by normalized slug
         const foundNote = await getNoteBySlug(normalizedSlug)
 
         if (!foundNote) {
-          const allNotes = await getAllNotes()
-          
-          if (process.env.NODE_ENV !== "production") {
-            console.log("[NotePage] Note not found by slug:", {
-              normalizedSlug,
-              candidateSlugs: allNotes.map(n => n.slug),
-            })
-          }
-
           if (active) {
             setNotFound(true)
             setLoading(false)
@@ -65,8 +47,8 @@ export default function NotePage() {
           setNote(foundNote)
           setLoading(false)
         }
-      } catch (error) {
-        console.error("[NotePage] Error loading note:", error)
+      } catch {
+        // Swallow implementation details; show a generic not-found state
         if (active) {
           setNotFound(true)
           setLoading(false)
@@ -77,7 +59,7 @@ export default function NotePage() {
     return () => {
       active = false
     }
-  }, [params.slug, router])
+  }, [params.slug])
 
   if (loading) {
     return (

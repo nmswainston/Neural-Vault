@@ -8,9 +8,9 @@
 
 // Default: last 7 days of commits
 
-const { execSync } = require("child_process")
-const fs = require("fs")
-const path = require("path")
+import { execSync } from "child_process"
+import fs from "fs"
+import path from "path"
 
 // How many days back to look by default
 const DEFAULT_DAYS = 7

@@ -7,10 +7,3 @@ export type Note = {
   content: string
 }
 
-export type ChatMessage = {
-  role: "user" | "assistant"
-  content: string
-  error?: boolean
-}
-
-

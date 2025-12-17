@@ -1,6 +1,9 @@
+import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { deleteNote, getNoteBySlug, updateNote } from "@/lib/notes"
 
+// Note: Next.js 16 uses a `Promise`-wrapped `params` type in the route handler context.
+// We mirror that shape here for type compatibility with the generated `RouteHandlerConfig`.
 type RouteParams = {
   params: Promise<{
     slug: string[]
@@ -8,7 +11,7 @@ type RouteParams = {
 }
 
 // PUT /api/notes/[...slug]
-export async function PUT(request: Request, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { slug } = await params
     const combinedSlug = Array.isArray(slug) ? slug.join("/") : ""
@@ -44,7 +47,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
 }
 
 // DELETE /api/notes/[...slug]
-export async function DELETE(_request: Request, { params }: RouteParams) {
+export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   try {
     const { slug } = await params
     const combinedSlug = Array.isArray(slug) ? slug.join("/") : ""
