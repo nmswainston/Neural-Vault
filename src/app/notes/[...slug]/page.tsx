@@ -1,22 +1,95 @@
-import { getNoteBySlug } from "@/lib/notes"
+"use client"
+
+import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import { getNoteBySlug, getAllNotes } from "@/data/repo"
 import { renderMarkdown } from "@/lib/simpleMarkdown"
-import { formatDateRange } from "@/lib/utils"
+import { formatDateRange, normalizeSlug } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import Link from "next/link"
+import type { Note } from "@/data/types"
 
-type PageProps = {
-  params: Promise<{
-    slug: string[]
-  }>
-}
+export default function NotePage() {
+  const params = useParams()
+  const router = useRouter()
+  const [note, setNote] = useState<Note | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [notFound, setNotFound] = useState(false)
 
-export default async function NotePage({ params }: PageProps) {
-  const { slug: slugArray } = await params
-  const slug = slugArray.join("/")
-  const note = await getNoteBySlug(slug)
+  useEffect(() => {
+    let active = true
 
-  if (!note) {
+    ;(async () => {
+      try {
+        // Get slug from params (catch-all route: [...slug])
+        const slugArray = params.slug as string[]
+        if (!slugArray || !Array.isArray(slugArray) || slugArray.length === 0) {
+          if (active) setNotFound(true)
+          return
+        }
+
+        // Join slug segments and normalize
+        const rawSlug = slugArray.join("/")
+        const normalizedSlug = normalizeSlug(rawSlug)
+
+        if (process.env.NODE_ENV !== "production") {
+          console.log("[NotePage] Route params:", {
+            slugArray,
+            rawSlug,
+            normalizedSlug,
+          })
+        }
+
+        // Try to find note by normalized slug
+        const foundNote = await getNoteBySlug(normalizedSlug)
+
+        if (!foundNote) {
+          const allNotes = await getAllNotes()
+          
+          if (process.env.NODE_ENV !== "production") {
+            console.log("[NotePage] Note not found by slug:", {
+              normalizedSlug,
+              candidateSlugs: allNotes.map(n => n.slug),
+            })
+          }
+
+          if (active) {
+            setNotFound(true)
+            setLoading(false)
+          }
+          return
+        }
+
+        if (active) {
+          setNote(foundNote)
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error("[NotePage] Error loading note:", error)
+        if (active) {
+          setNotFound(true)
+          setLoading(false)
+        }
+      }
+    })()
+
+    return () => {
+      active = false
+    }
+  }, [params.slug, router])
+
+  if (loading) {
+    return (
+      <main className="flex h-full items-center justify-center p-6">
+        <Card variant="outlined" className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
+          <p className="mb-2 font-medium">Loading note...</p>
+        </Card>
+      </main>
+    )
+  }
+
+  if (notFound || !note) {
     return (
       <main className="flex h-full items-center justify-center p-6">
         <Card variant="outlined" className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
@@ -36,6 +109,7 @@ export default async function NotePage({ params }: PageProps) {
 
   const dateText = formatDateRange(note.updatedAt, note.createdAt)
   const html = renderMarkdown(note.content)
+  const slug = Array.isArray(params.slug) ? params.slug.join("/") : String(params.slug || "")
 
   return (
     <main className="mx-auto max-w-3xl h-full flex flex-col gap-4 p-6 overflow-y-auto">
@@ -123,5 +197,3 @@ export default async function NotePage({ params }: PageProps) {
     </main>
   )
 }
-
-

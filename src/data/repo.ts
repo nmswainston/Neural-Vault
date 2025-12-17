@@ -1,5 +1,6 @@
 import type { ChatMessage, Note } from "@/data/types"
 import { seedNotes } from "@/data/mock/notes"
+import { normalizeSlug } from "@/lib/utils"
 
 const STORAGE_KEY = "neural-vault-notes"
 
@@ -37,9 +38,13 @@ function ensureInitialized(): Note[] {
   const existing = safeReadNotes()
   if (existing && existing.length) return existing
 
-  // First run: seed local storage
-  safeWriteNotes(seedNotes)
-  return seedNotes
+  // First run: seed local storage with normalized slugs
+  const normalizedSeedNotes = seedNotes.map((note) => ({
+    ...note,
+    slug: normalizeSlug(note.slug),
+  }))
+  safeWriteNotes(normalizedSeedNotes)
+  return normalizedSeedNotes
 }
 
 export async function getAllNotes(): Promise<Note[]> {
@@ -51,7 +56,8 @@ export async function getAllNotes(): Promise<Note[]> {
 export async function getNoteBySlug(slug: string): Promise<Note | null> {
   await delay(randomDelay())
   const notes = ensureInitialized()
-  return notes.find((n) => n.slug === slug) ?? null
+  const normalizedSlug = normalizeSlug(slug)
+  return notes.find((n) => normalizeSlug(n.slug) === normalizedSlug) ?? null
 }
 
 export async function createNote(input: {
@@ -63,17 +69,17 @@ export async function createNote(input: {
   await delay(randomDelay())
   const notes = ensureInitialized()
 
-  const slug = input.slug.trim()
-  if (!slug) throw new Error("Invalid note slug provided")
+  const normalizedSlug = normalizeSlug(input.slug)
+  if (!normalizedSlug) throw new Error("Invalid note slug provided")
 
-  if (notes.some((n) => n.slug === slug)) {
-    throw new Error(`Note with slug "${slug}" already exists`)
+  if (notes.some((n) => normalizeSlug(n.slug) === normalizedSlug)) {
+    throw new Error(`Note with slug "${normalizedSlug}" already exists`)
   }
 
   const now = new Date().toISOString()
   const note: Note = {
-    title: input.title.trim() || slug,
-    slug,
+    title: input.title.trim() || normalizedSlug,
+    slug: normalizedSlug,
     tags: Array.isArray(input.tags) ? input.tags : [],
     createdAt: now,
     updatedAt: now,
@@ -94,8 +100,9 @@ export async function updateNote(input: {
   await delay(randomDelay())
   const notes = ensureInitialized()
 
-  const idx = notes.findIndex((n) => n.slug === input.slug)
-  if (idx === -1) throw new Error(`Note with slug "${input.slug}" not found`)
+  const normalizedSlug = normalizeSlug(input.slug)
+  const idx = notes.findIndex((n) => normalizeSlug(n.slug) === normalizedSlug)
+  if (idx === -1) throw new Error(`Note with slug "${normalizedSlug}" not found`)
 
   const existing = notes[idx]
   const now = new Date().toISOString()
@@ -118,9 +125,10 @@ export async function deleteNote(slug: string): Promise<void> {
   await delay(randomDelay())
   const notes = ensureInitialized()
 
-  const next = notes.filter((n) => n.slug !== slug)
+  const normalizedSlug = normalizeSlug(slug)
+  const next = notes.filter((n) => normalizeSlug(n.slug) !== normalizedSlug)
   if (next.length === notes.length) {
-    throw new Error(`Note with slug "${slug}" not found`)
+    throw new Error(`Note with slug "${normalizedSlug}" not found`)
   }
 
   safeWriteNotes(next)

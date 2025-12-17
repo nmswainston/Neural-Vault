@@ -52,3 +52,17 @@ export function parseTags(tagsString: string): string[] {
     .filter(Boolean)
 }
 
+/**
+ * Normalize a slug from URL params or route segments.
+ * Decodes URI components, trims whitespace, and converts to lowercase.
+ * This ensures consistent comparison between route params and stored note slugs.
+ */
+export function normalizeSlug(slug: string): string {
+  try {
+    return decodeURIComponent(slug).trim().toLowerCase()
+  } catch {
+    // If decodeURIComponent fails (invalid URI), fallback to basic normalization
+    return slug.trim().toLowerCase()
+  }
+}
+
