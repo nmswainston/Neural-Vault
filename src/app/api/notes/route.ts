@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createNote } from "@/lib/notes"
+import { createNote, getAllNotes } from "@/lib/notes"
 
 function slugify(input: string): string {
 	// Basic slugify: lowercase, remove non-word, replace spaces/hyphens with single hyphen
@@ -11,6 +11,18 @@ function slugify(input: string): string {
 		.replace(/[^a-z0-9\s-]/g, "")
 		.replace(/[\s_-]+/g, "-")
 		.replace(/^-+|-+$/g, "")
+}
+
+// GET /api/notes
+// Returns all notes
+export async function GET() {
+	try {
+		const notes = await getAllNotes()
+		return NextResponse.json(notes)
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		return NextResponse.json({ error: message }, { status: 500 })
+	}
 }
 
 // POST /api/notes

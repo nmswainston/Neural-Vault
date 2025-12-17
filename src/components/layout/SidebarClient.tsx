@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import type { Note } from "@/lib/notes"
+import type { Note } from "@/data/types"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import ThemeToggle from "./ThemeToggle"

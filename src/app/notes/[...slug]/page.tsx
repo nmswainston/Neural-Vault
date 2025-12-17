@@ -24,7 +24,7 @@ export default async function NotePage({ params }: PageProps) {
           <p className="text-xs text-slate-400 dark:text-slate-400">
             The requested entry could not be located in the vault.
           </p>
-          <Link href="/notes" className="mt-3 inline-block">
+          <Link href="/" className="mt-3 inline-block">
             <Button variant="secondary" size="sm">
               Return to notes
             </Button>
